@@ -20,14 +20,14 @@
         <h1>Prendre un Rendez-vous</h1>
         <p id="leadInfo">Chargement...</p>
         <div id="calendar"></div>
-        <p id="confirmation">✅ Votre rendez-vous a été enregistré !</p>
+        <p id="confirmation"> Votre rendez-vous a été enregistré !</p>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            console.log("✅ Chargement du script");
+            console.log(" Chargement du script");
 
-            // 📌 Récupération des paramètres envoyés depuis Brevo
+            //  Récupération des paramètres envoyés depuis Brevo
             const params = new URLSearchParams(window.location.search);
             const lead = {
                 nom: params.get("nom") || "Client",
@@ -69,10 +69,10 @@
             })
             .then(response => response.text())
             .then(data => {
-                console.log("✅ Réservation envoyée :", data);
+                console.log(" Réservation envoyée :", data);
                 document.getElementById("confirmation").style.display = "block";
             })
-            .catch(error => console.error("❌ Erreur API:", error));
+            .catch(error => console.error(" Erreur API:", error));
         }
     </script>
 </body>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prendre un Rendez-vous - GTI Immobilier</title>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar/timegrid@5.10.2/main.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; padding: 20px; }
+        .container { background: white; padding: 20px; max-width: 800px; margin: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        h1 { color: #C8106E; }
+        #calendar { max-width: 800px; margin: auto; }
+        #confirmation { display: none; color: green; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prendre un Rendez-vous</h1>
+        <p id="leadInfo">Chargement...</p>
+        <div id="calendar"></div>
+        <p id="confirmation">✅ Votre rendez-vous a été enregistré !</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("✅ Chargement du script");
+
+            // 📌 Récupération des paramètres envoyés depuis Brevo
+            const params = new URLSearchParams(window.location.search);
+            const lead = {
+                nom: params.get("nom") || "Client",
+                prenom: params.get("prenom") || "",
+                email: params.get("email") || "",
+                telephone: params.get("telephone") || ""
+            };
+
+            document.getElementById("leadInfo").innerHTML = `Bonjour <b>${lead.prenom} ${lead.nom}</b>, sélectionnez un créneau disponible :`;
+
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                slotDuration: '00:30:00',
+                slotMinTime: "09:00:00",
+                slotMaxTime: "18:00:00",
+                selectable: true,
+                select: function(info) {
+                    if (confirm(`Confirmer votre RDV le ${info.start.toLocaleString()} ?`)) {
+                        bookSlot(info.start, lead);
+                    }
+                }
+            });
+
+            calendar.render();
+        });
+
+        function bookSlot(date, lead) {
+            fetch("https://script.google.com/macros/s/TON_SCRIPT_ID/exec", {  // Remplace par ton vrai script ID
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    nom: lead.nom,
+                    prenom: lead.prenom,
+                    email: lead.email,
+                    telephone: lead.telephone,
+                    rdvDate: date.toISOString()
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log("✅ Réservation envoyée :", data);
+                document.getElementById("confirmation").style.display = "block";
+            })
+            .catch(error => console.error("❌ Erreur API:", error));
+        }
+    </script>
+</body>
+</html>

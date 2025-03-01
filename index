@@ -1,36 +1,4 @@
-                initialView: 'timeGridWeek',
-                slotDuration: '00:30:00',
-                slotMinTime: "09:00:00",
-                slotMaxTime: "18:00:00",
-                selectable: true,
-                select: function(info) {
-                    if (confirm(`Confirmer votre RDV le ${info.start.toLocaleString()} ?`)) {
-                        bookSlot(info.start, lead);
-                    }
-                }
-            });
-
-            calendar.render();
-        });
-
-        function bookSlot(date, lead) {
-            fetch("https://script.google.com/macros/s/TON_SCRIPT_ID/exec", {  // Remplace par ton vrai script ID
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    nom: lead.nom,
-                    prenom: lead.prenom,
-                    email: lead.email,
-                    telephone: lead.telephone,
-                    rdvDate: date.toISOString()
-                })
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log(" Réservation envoyée :", data);
-                document.getElementById("confirmation").style.display = "block";
-            })
-            .catch(error => console.error(" Erreur API:", error));
+15b1bf6950e8571a83b28365fced442c6bfd478d
         }
     </script>
 </body>

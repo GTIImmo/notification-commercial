@@ -1,37 +1,48 @@
 document.addEventListener("DOMContentLoaded", function() {
     const params = new URLSearchParams(window.location.search);
     
-    document.getElementById('nom').innerText = params.get('nom');
-    document.getElementById('prenom').innerText = params.get('prenom');
-    document.getElementById('adresse').innerText = params.get('adresse');
-    document.getElementById('codePostal').innerText = params.get('codePostal');
-    document.getElementById('ville').innerText = params.get('ville');
-    document.getElementById('typeBien').innerText = params.get('typeBien');
-    document.getElementById('surface').innerText = params.get('surface');
-    document.getElementById('googleMaps').href = params.get('googleMaps');
-
-    const telephone = params.get('telephone');
-    if (telephone) {
-        document.getElementById('telephoneSection').innerHTML = `
-            <button class="btn btn-primary" onclick="appel('${telephone}')">📞 Appeler ${telephone}</button>
-        `;
+    function getParamValue(key) {
+        return params.get(key) ? decodeURIComponent(params.get(key)) : "";
     }
-
-    document.getElementById('rendezVousBtn').href = "#"; // Lien d'agenda à définir
-
-    function updateGoogleSheet(action) {
-        fetch(`https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?action=${action}&row=${params.get('row')}`)
-            .then(() => alert("✅ Action enregistrée avec succès !"));
+    
+    function updateGoogleSheet(action, newDate = "") {
+        if (!confirm("Confirmer cette action ?")) return;
+        
+        let url = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec?action=${action}&row=${params.get("row")}`;
+        if (newDate) url += `&rdv=${encodeURIComponent(newDate)}`;
+        
+        fetch(url)
+            .then(response => response.text())
+            .then(result => {
+                alert(result);
+                location.reload();
+            })
+            .catch(error => console.error("❌ Erreur :", error));
     }
-
-    document.getElementById('priseChargeBtn').addEventListener('click', () => updateGoogleSheet("confirm"));
-    document.getElementById('modifierBtn').addEventListener('click', () => updateGoogleSheet("modify"));
+    
+    document.getElementById("nom").textContent = `👤 ${getParamValue("nom")}`;
+    document.getElementById("prenom").textContent = `🆔 ${getParamValue("prenom")}`;
+    document.getElementById("rdv").textContent = `📅 ${getParamValue("rdv")}`;
+    document.getElementById("statutRDV").textContent = `📆 Statut : ${getParamValue("statutRDV")}`;
+    
+    document.getElementById("confirmerBtn").addEventListener("click", function() {
+        updateGoogleSheet("confirmer");
+    });
+    
+    document.getElementById("modifierBtn").addEventListener("click", function() {
+        document.getElementById("modifierSection").style.display = "block";
+    });
+    
+    document.getElementById("validerModifBtn").addEventListener("click", function() {
+        let nouvelleDate = document.getElementById("nouvelleDate").value;
+        if (!nouvelleDate) {
+            alert("Veuillez entrer une nouvelle date.");
+            return;
+        }
+        updateGoogleSheet("modifier", nouvelleDate);
+    });
+    
+    document.getElementById("annulerBtn").addEventListener("click", function() {
+        updateGoogleSheet("annuler");
+    });
 });
-
-function appel(numero) {
-    if (navigator.userAgent.match(/(iPhone|Android)/i)) {
-        window.location.href = `tel:${numero}`;
-    } else {
-        alert(`Composez le numéro : ${numero}`);
-    }
-}

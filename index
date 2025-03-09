@@ -3,38 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des RDV - GTI Immobilier</title>
+    <title>Suivi des Leads - GTI Immobilier</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- 🌟 Logo avec fond anthracite -->
     <header>
         <div class="header">
             <img src="https://www.gti-immobilier.fr/application/files/5617/3617/2343/GTI-Logos-Grisblanc.png" alt="GTI Immobilier" class="logo">
         </div>
     </header>
 
+    <!-- 📋 Conteneur principal -->
     <div class="container">
-        <h1>📅 Gestion du Rendez-vous</h1>
+        <h1>🔎 Détails du Lead</h1>
+
+        <!-- 📌 Zone d'affichage des informations en 2 colonnes -->
         <div class="lead-info">
             <p id="nom"></p>
             <p id="prenom"></p>
-            <p id="rdv"></p>
-            <p id="statutRDV"></p>
+            <p id="email"></p>
+            <p id="adresse"></p>
+            <p id="codePostal"></p>
+            <p id="ville"></p>
+            <p id="typedebien"></p>
+            <p id="surface"></p>
+            <p id="nbPieces"></p>
+            <p id="prix"></p>
         </div>
 
+        <!-- 📞 Boutons d'actions -->
         <div class="buttons">
-            <button id="confirmerBtn" class="btn btn-success">✅ Confirmer RDV</button>
-            <button id="modifierBtn" class="btn btn-warning">🔄 Modifier RDV</button>
-            <button id="annulerBtn" class="btn btn-danger">❌ Annuler RDV</button>
-        </div>
-
-        <div id="modifierSection" style="display: none; margin-top: 20px;">
-            <label for="nouvelleDate">🗓️ Nouvelle date :</label>
-            <input type="datetime-local" id="nouvelleDate">
-            <button id="validerModifBtn" class="btn btn-primary">💾 Sauvegarder</button>
+            <button id="priseChargeBtn" class="btn btn-secondary">✅ C'est noté</button>
+            <button id="appelerBtn" class="btn btn-warning">📞 Appeler</button>
+            <button id="planifierRelanceBtn" class="btn btn-primary">📅 Planifier une relance</button>
         </div>
     </div>
 
-    <script src="rdv.js"></script>
+    <!-- 📅 Boîte de dialogue pour choisir la date de relance -->
+    <div id="relancePopup" class="popup">
+        <div class="popup-content">
+            <h2>📅 Planifier une relance</h2>
+            <label for="relanceDate">Choisissez une date :</label>
+            <input type="date" id="relanceDate">
+            <div class="popup-buttons">
+                <button id="confirmerRelanceBtn" class="btn btn-primary">✅ Confirmer</button>
+                <button id="fermerPopupBtn" class="btn btn-secondary">❌ Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
